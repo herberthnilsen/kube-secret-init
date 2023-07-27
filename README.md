@@ -5,11 +5,7 @@ This is a fork of the original repo https://github.com/doitintl/secrets-init tha
 
 ## Using with Oracle Cloud Vault
 
-You need to install the kube-secret-init as usual and describe below on this file, in this repo there are a `values.yaml` file that has a image path to the container of `kube-secret-init` and the initContainer `secret-init`.
-
-The current value is referencing a public repository on Oracle Cloud, but it can be deleted any time, so you will need to build again the container and publish on some container registry
-
-Using the helm command specified below with the option --values=values.yaml, you will get the image that use the code of this repo.
+Take sure that you have executed the steps in the repo https://github.com/herberthnilsen/kube-secrets-init, if the images wasn't available, you need to build this repo with `docker build` and to store in some container registry
 
 ### Before start to use
 
