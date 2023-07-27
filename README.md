@@ -1,6 +1,6 @@
 # `DISCLAIMER`
 
-This is a fork of the original repo https://github.com/doitintl/kube-secrets-init that was modified to support Oracle Cloud Vault, all the other features still working and wasn't modified
+This is a fork of the original repo https://github.com/doitintl/secrets-init that was modified to support Oracle Cloud Vault, all the other features still working and wasn't modified
 
 
 ## Using with Oracle Cloud Vault
