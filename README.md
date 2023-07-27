@@ -1,4 +1,58 @@
-[![test](https://github.com/doitintl/secrets-init/actions/workflows/test.yaml/badge.svg)](https://github.com/doitintl/secrets-init/actions/workflows/test.yaml) [![Go Report Card](https://goreportcard.com/badge/github.com/doitintl/secrets-init)](https://goreportcard.com/report/github.com/doitintl/secrets-init) [![GitHub release (latest SemVer)](https://img.shields.io/github/v/release/doitintl/secrets-init?label=image)](https://github.com/doitintl/secrets-init/pkgs/container/secrets-init)
+# `DISCLAIMER`
+
+This is a fork of the original repo https://github.com/doitintl/kube-secrets-init that was modified to support Oracle Cloud Vault, all the other features still working and wasn't modified
+
+
+## Using with Oracle Cloud Vault
+
+You need to install the kube-secret-init as usual and describe below on this file, in this repo there are a `values.yaml` file that has a image path to the container of `kube-secret-init` and the initContainer `secret-init`.
+
+The current value is referencing a public repository on Oracle Cloud, but it can be deleted any time, so you will need to build again the container and publish on some container registry
+
+Using the helm command specified below with the option --values=values.yaml, you will get the image that use the code of this repo.
+
+### Before start to use
+
+You need to setup Instace Principal on your Oracle Cloud environment
+
+First you need to create a Dynamic Group to reference all the VMs that the OKE Cluster has using, please check this documentation and use this Matching Rule below
+
+OCI Documentation [Managing Dynamic Group](https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/managingdynamicgroups.htm)
+
+```sh
+
+instance.compartment.id='ocid1.compartment.oc1..<rest of compartment ocid>
+
+```
+
+After that you need to create a OCI Policy that gives permission to that dynamic group
+
+```sh
+
+Allow dynamic-group <DynamicGroup Name> to manage vaults in compartment id <Compartment OCID that has a instance of OCI Vault>
+
+Allow dynamic-group <DynamicGroup Name> to manage keys in compartment id <Compartment OCID that has a instance of OCI Vault>
+
+Allow dynamic-group <DynamicGroup Name> to manage secret-family in compartment <Compartment OCID that has a instance of OCI Vault>
+
+```
+
+
+### Integration with Oracle Cloud Vault
+
+To use this solution with Oracle Cloud Vault, you need to identify the environment variable using the prefix `oci:vault:` + OCID of your secret on Oracle Cloud Vault
+
+```sh
+# environment variable passed to `secrets-init`
+MY_API_KEY=oci:vault:ocid.secret.aaaaaaaaaaa
+
+# environment variable passed to child process, resolved by `secrets-init`
+MY_API_KEY=key-123456789
+```
+
+
+
+
 
 ## Blog Post
 
