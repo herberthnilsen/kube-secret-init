@@ -6,11 +6,12 @@ require (
 	cloud.google.com/go/secretmanager v1.8.0
 	github.com/aws/aws-sdk-go v1.44.128
 	github.com/googleapis/gax-go/v2 v2.6.0
+	github.com/oracle/oci-go-sdk/v65 v65.44.0
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.9.0
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.4
 	github.com/urfave/cli/v2 v2.23.0
-	golang.org/x/sys v0.1.0
+	golang.org/x/sys v0.8.0
 	google.golang.org/genproto v0.0.0-20221010155953-15ba04fc1c0e
 )
 
@@ -19,6 +20,7 @@ require (
 	cloud.google.com/go/iam v0.5.0 // indirect
 	github.com/cpuguy83/go-md2man/v2 v2.0.2 // indirect
 	github.com/davecgh/go-spew v1.1.1 // indirect
+	github.com/gofrs/flock v0.8.1 // indirect
 	github.com/golang/groupcache v0.0.0-20200121045136-8c9f03a8e57e // indirect
 	github.com/golang/protobuf v1.5.2 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
@@ -27,6 +29,7 @@ require (
 	github.com/kr/pretty v0.1.0 // indirect
 	github.com/pmezard/go-difflib v1.0.0 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
+	github.com/sony/gobreaker v0.5.0 // indirect
 	github.com/stretchr/objx v0.5.0 // indirect
 	github.com/xrash/smetrics v0.0.0-20201216005158-039620a65673 // indirect
 	go.opencensus.io v0.23.0 // indirect

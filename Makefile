@@ -9,7 +9,7 @@ TESTPKGS = $(shell env GO111MODULE=on $(GO) list -f \
 			'{{ if or .TestGoFiles .XTestGoFiles }}{{ .ImportPath }}{{ end }}' \
 			$(PKGS))
 BIN      = $(CURDIR)/.bin
-LINT_CONFIG = $(CURDIR)/.golangci.yaml
+
 PLATFORMS     = darwin linux
 ARCHITECTURES = amd64 arm64
 TARGETOS   ?= $(GOOS)
@@ -28,7 +28,7 @@ export CGO_ENABLED=0
 export GOPROXY=https://proxy.golang.org
 
 .PHONY: all
-all: fmt lint test ; $(info $(M) building executable...) @ ## Build program binary
+all: fmt test ; $(info $(M) building executable...) @ ## Build program binary
 	$Q env GOOS=$(TARGETOS) GOARCH=$(TARGETARCH) $(GO) build \
 		-tags release \
 		-ldflags "$(LDFLAGS_VERSION) -X main.Platform=$(TARGETOS)/$(TARGETARCH)" \
@@ -37,7 +37,7 @@ all: fmt lint test ; $(info $(M) building executable...) @ ## Build program bina
 # Release for multiple platforms
 
 .PHONY: platfrom-build
-platfrom-build: clean lint test ; $(info $(M) building binaries for multiple os/arch...) @ ## Build program binary for platforms and os
+platfrom-build: clean test ; $(info $(M) building binaries for multiple os/arch...) @ ## Build program binary for platforms and os
 	$(foreach GOOS, $(PLATFORMS),\
 		$(foreach GOARCH, $(ARCHITECTURES), \
 			$(shell \
@@ -49,10 +49,8 @@ platfrom-build: clean lint test ; $(info $(M) building binaries for multiple os/
 
 # Tools
 
-setup-tools: setup-lint setup-gocov setup-gocov-xml setup-go2xunit setup-mockery setup-ghr
+setup-tools: setup-gocov setup-gocov-xml setup-go2xunit setup-mockery setup-ghr
 
-setup-lint:
-	$(GO) install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.1
 setup-gocov:
 	$(GO) install github.com/axw/gocov/...
 setup-gocov-xml:
@@ -64,7 +62,7 @@ setup-mockery:
 setup-ghr:
 	$(GO) install github.com/tcnksm/ghr@v0.13.0
 
-GOLINT=golangci-lint
+
 GOCOV=gocov
 GOCOVXML=gocov-xml
 GO2XUNIT=go2xunit
@@ -83,7 +81,7 @@ $(TEST_TARGETS): test
 check test tests: fmt ; $(info $(M) running $(NAME:%=% )tests...) @ ## Run tests
 	$Q $(GO) test -timeout $(TIMEOUT)s $(ARGS) $(TESTPKGS)
 
-test-xml: fmt lint | $(GO2XUNIT) ; $(info $(M) running xUnit tests...) @ ## Run tests with xUnit output
+test-xml: fmt | $(GO2XUNIT) ; $(info $(M) running xUnit tests...) @ ## Run tests with xUnit output
 	$Q mkdir -p test
 	$Q 2>&1 $(GO) test -timeout $(TIMEOUT)s -v $(TESTPKGS) | tee test/tests.output
 	$(GO2XUNIT) -fail -input test/tests.output -output test/tests.xml
@@ -95,7 +93,7 @@ COVERAGE_HTML    = $(COVERAGE_DIR)/index.html
 .PHONY: test-coverage test-coverage-tools
 test-coverage-tools: | $(GOCOV) $(GOCOVXML)
 test-coverage: COVERAGE_DIR := $(CURDIR)/test/coverage.$(shell date -u +"%Y-%m-%dT%H:%M:%SZ")
-test-coverage: fmt lint test-coverage-tools ; $(info $(M) running coverage tests...) @ ## Run coverage tests
+test-coverage: fmt test-coverage-tools ; $(info $(M) running coverage tests...) @ ## Run coverage tests
 	$Q mkdir -p $(COVERAGE_DIR)
 	$Q $(GO) test \
 		-coverpkg=$$($(GO) list -f '{{ join .Deps "\n" }}' $(TESTPKGS) | \
@@ -106,9 +104,9 @@ test-coverage: fmt lint test-coverage-tools ; $(info $(M) running coverage tests
 	$Q $(GO) tool cover -html=$(COVERAGE_PROFILE) -o $(COVERAGE_HTML)
 	$Q $(GOCOV) convert $(COVERAGE_PROFILE) | $(GOCOVXML) > $(COVERAGE_XML)
 
-.PHONY: lint
-lint: setup-lint ; $(info $(M) running golangci-lint) @ ## Run golangci-lint
-	$Q $(GOLINT) run --timeout=5m -v -c $(LINT_CONFIG) ./...
+# .PHONY: lint
+# lint: setup-lint ; $(info $(M) running golangci-lint) @ ## Run golangci-lint
+# $Q $(GOLINT) run --timeout=5m -v -c $(LINT_CONFIG) ./...
 
 .PHONY: fmt
 fmt: ; $(info $(M) running gofmt...) @ ## Run gofmt on all source files

@@ -14,6 +14,7 @@ import (
 	"secrets-init/pkg/secrets" //nolint:gci
 	"secrets-init/pkg/secrets/aws"
 	"secrets-init/pkg/secrets/google"
+	"secrets-init/pkg/secrets/oracle"
 
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
@@ -46,7 +47,7 @@ func main() {
 			},
 			&cli.StringFlag{
 				Name:  "provider, p",
-				Usage: "supported secrets manager provider ['aws', 'google']",
+				Usage: "supported secrets manager provider ['aws', 'google', 'oracle']",
 				Value: "aws",
 			},
 		},
@@ -130,6 +131,8 @@ func mainCmd(c *cli.Context) error {
 		provider, err = aws.NewAwsSecretsProvider()
 	} else if c.String("provider") == "google" {
 		provider, err = google.NewGoogleSecretsProvider(ctx)
+	} else if c.String("provider") == "oracle" {
+		provider, err = oracle.NewOracleVaultProvider(ctx)
 	}
 	if err != nil {
 		log.WithField("provider", c.String("provider")).WithError(err).Error("failed to initialize secrets provider")
